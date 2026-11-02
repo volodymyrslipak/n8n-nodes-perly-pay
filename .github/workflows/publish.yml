@@ -1,0 +1,55 @@
+# Publishes n8n-nodes-perly-pay to npm, with a provenance statement, when a version tag is pushed
+# (0.1.0, 0.2.0, …). n8n accepts community nodes only when they are published this way (from
+# 1 May 2026): provenance proves the package on npm was built by this workflow, from this
+# repository and commit. `npx @n8n/scan-community-package n8n-nodes-perly-pay` checks it.
+#
+# This is @n8n/node-cli's own workflow (`n8n-node release --init-workflow`), for npm.
+#
+# One-time setup, either:
+#   A. npm Trusted Publishing (no secret): npmjs.com → the package → Settings → Trusted Publishers →
+#      GitHub Actions, owner volodymyrslipak, repository n8n-nodes-perly-pay, workflow publish.yml.
+#      The package must exist on npm first, so the very first version goes out with B.
+#   B. A granular npm access token, read and write for this package only, saved in this repository
+#      as the Actions secret NPM_TOKEN. Remove the secret once A is set up.
+#
+# Release: bump "version" in package.json and the CHANGELOG, commit to main, then
+#   git tag 0.1.0 && git push origin 0.1.0
+# (or `npm run release`, which does the same with release-it). In CI, `npm run release` runs
+# `n8n-node release`: lint, build, then `npm publish` with provenance.
+
+name: Publish
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Mints the OIDC token npm's provenance attestation (and Trusted Publishing) needs.
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Release
+        # With NPM_TOKEN unset, npm uses the OIDC exchange (Trusted Publishing).
+        run: |
+          [ -n "$NPM_TOKEN" ] && npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
+          npm run release
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

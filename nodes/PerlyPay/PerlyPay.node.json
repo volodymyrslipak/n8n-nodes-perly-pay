@@ -1,0 +1,18 @@
+{
+	"node": "n8n-nodes-perly-pay.perlyPay",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Finance & Accounting", "Sales"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/volodymyrslipak/n8n-nodes-perly-pay#credentials"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/volodymyrslipak/n8n-nodes-perly-pay#readme"
+			}
+		]
+	}
+}

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="pp-tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1B2232"/>
+      <stop offset="55%" stop-color="#0B0F18"/>
+      <stop offset="100%" stop-color="#1E2538"/>
+    </linearGradient>
+    <radialGradient id="pp-body" cx="36%" cy="30%" r="78%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="34%" stop-color="#F1EAE0"/>
+      <stop offset="64%" stop-color="#D9D3E8"/>
+      <stop offset="100%" stop-color="#9FA8B8"/>
+    </radialGradient>
+    <radialGradient id="pp-rim" cx="70%" cy="82%" r="52%">
+      <stop offset="0%" stop-color="#CFE0EA" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#CFE0EA" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#pp-tile)"/>
+  <circle cx="32" cy="32" r="20" fill="url(#pp-body)"/>
+  <circle cx="32" cy="32" r="20" fill="url(#pp-rim)"/>
+  <ellipse cx="25" cy="23.5" rx="5.5" ry="4" fill="#FFFFFF" opacity="0.75"/>
+  <circle cx="32" cy="32" r="19.4" fill="none" stroke="#FFFFFF" stroke-opacity="0.35"/>
+</svg>

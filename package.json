@@ -1,0 +1,65 @@
+{
+	"name": "n8n-nodes-perly-pay",
+	"version": "0.1.0",
+	"description": "Perly Pay for n8n: crypto payments (bitcoin, USDC, USDT) straight to your own wallet, in any workflow.",
+	"license": "MIT",
+	"homepage": "https://github.com/volodymyrslipak/n8n-nodes-perly-pay#readme",
+	"keywords": [
+		"n8n-community-node-package",
+		"n8n",
+		"perly",
+		"perly-pay",
+		"payments",
+		"crypto-payments",
+		"bitcoin",
+		"usdc",
+		"usdt",
+		"stablecoin",
+		"invoices",
+		"non-custodial"
+	],
+	"author": {
+		"name": "Perly",
+		"email": "hi@perly.io"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/volodymyrslipak/n8n-nodes-perly-pay.git"
+	},
+	"bugs": {
+		"url": "https://github.com/volodymyrslipak/n8n-nodes-perly-pay/issues"
+	},
+	"scripts": {
+		"build": "n8n-node build",
+		"build:watch": "tsc --watch",
+		"dev": "n8n-node dev",
+		"lint": "n8n-node lint",
+		"lint:fix": "n8n-node lint --fix",
+		"release": "n8n-node release",
+		"prepublishOnly": "n8n-node prerelease"
+	},
+	"files": [
+		"dist"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"strict": true,
+		"credentials": [
+			"dist/credentials/PerlyPayApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/PerlyPay/PerlyPay.node.js",
+			"dist/nodes/PerlyPayTrigger/PerlyPayTrigger.node.js"
+		]
+	},
+	"devDependencies": {
+		"@n8n/node-cli": "0.53.1",
+		"eslint": "9.39.4",
+		"prettier": "3.8.3",
+		"release-it": "20.2.0",
+		"typescript": "5.9.3"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}
