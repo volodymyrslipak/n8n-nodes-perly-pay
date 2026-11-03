@@ -49,7 +49,7 @@ Amounts come as Perly Pay sends them, as integers (cents; coins in their smalles
 ## Credentials
 
 1. Sign up at [pay.perly.io](https://pay.perly.io) and connect your wallet's public keys ([how](https://pay.perly.io/docs/wallets)).
-2. In Perly Pay, open **Dashboard → Developers → API keys** and copy a secret key: `sk_test_…` for test mode (test coins only), `sk_live_…` for real payments. The key decides the mode, so a workflow built with a test key can never move real money.
+2. In Perly Pay, open **Dashboard → Developers → API keys** and copy a secret key: `sk_test_…` for test mode (test coins only), `sk_live_…` for real payments. Give it Full access, or Restricted with **Webhook endpoints** ticked: the trigger adds its own webhook. The key decides the mode, so a workflow built with a test key can never move real money.
 3. In n8n, add a **Perly Pay API** credential and paste the key. n8n tests it by listing your webhook endpoints, which also proves the key may make the trigger's.
 
 ## Compatibility

@@ -32,7 +32,7 @@ export class PerlyPayApi implements ICredentialType {
 			default: '',
 			placeholder: 'sk_test_…',
 			description:
-				'From Dashboard → Developers → API keys in Perly Pay. A sk_test_… key works in test mode (test coins only); sk_live_… takes real payments.',
+				'From Dashboard → Developers → API keys in Perly Pay. A sk_test_… key works in test mode (test coins only); sk_live_… takes real payments. Full access, or Restricted with Webhook endpoints ticked: the triggers add their own webhooks.',
 		},
 		{
 			// Perly Pay is hosted at one address; the field lets Perly Pay's own tests point a credential at a local copy.
