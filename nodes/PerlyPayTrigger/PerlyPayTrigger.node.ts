@@ -139,16 +139,20 @@ export class PerlyPayTrigger implements INodeType {
 		const data = this.getWorkflowStaticData('node');
 		const raw: unknown = request.rawBody;
 		const hasRaw = (Buffer.isBuffer(raw) || typeof raw === 'string') && raw.length > 0;
-		let event: IDataObject | null;
+		let id: unknown;
 		if (hasRaw) {
 			const verdict = check(raw, headerOf(this.getHeaderData(), SIGNATURE_HEADER), data.secret);
 			if (verdict === 'bad')
 				return refuse(this, "Not signed by Perly Pay with this workflow's webhook secret.");
-			const sent = parse(raw as Buffer | string);
-			event = verdict === 'ok' ? sent : await readBack.call(this, sent?.id);
+			id = parse(raw as Buffer | string)?.id;
 		} else {
-			event = await readBack.call(this, this.getBodyData().id);
+			id = this.getBodyData().id;
 		}
+		// Every delivery is claimed once before it runs, signed or not: one posted again
+		// (a replay of a signed one, or an old event id) runs nothing.
+		const claimed = await claim.call(this, data.endpointId, id);
+		if (claimed === 'taken') return { webhookResponse: { received: true } };
+		const event = claimed;
 		if (!event) return refuse(this, 'Perly Pay has no such event for this key.');
 		const wanted = Array.isArray(data.events) ? (data.events as string[]) : chosenEvents(this);
 		if (
@@ -192,10 +196,11 @@ function parse(raw: Buffer | string): IDataObject | null {
 	}
 }
 
-/** The event as Perly Pay holds it, read with the credential's key: what is trusted when the signature cannot say. */
-async function readBack(this: IWebhookFunctions, id: unknown): Promise<IDataObject | null> {
-	if (typeof id !== 'string' || !/^evt_\d{1,16}$/.test(id)) return null;
-	const response = await send.call(this, R.getEvent(id));
+/** This endpoint's delivery of the event, taken with the credential's key: the event, 'taken' when it ran before, null when Perly Pay never sent it here. */
+async function claim(this: IWebhookFunctions, endpointId: unknown, id: unknown): Promise<IDataObject | 'taken' | null> {
+	if (typeof endpointId !== 'string' || typeof id !== 'string' || !/^evt_[1-9]\d{0,15}$/.test(id)) return null;
+	const response = await send.call(this, R.claimDelivery(endpointId, id));
+	if (response.status === 409) return 'taken';
 	if (response.status === 404) return null;
 	if (response.status >= 400) throw refusal(this, response);
 	return response.body && typeof response.body === 'object' ? (response.body as IDataObject) : null;

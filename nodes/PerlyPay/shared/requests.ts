@@ -223,11 +223,19 @@ export const deleteWebhookEndpoint = (id: unknown): ApiRequest => ({
 	path: `/webhook_endpoints/${segment(id, 'webhook endpoint ID')}`,
 });
 
-/** An event as Perly Pay holds it, by its id (evt_ and digits): what the trigger trusts when a signature cannot say. */
-export function getEvent(id: unknown): ApiRequest {
-	if (typeof id !== 'string' || !/^evt_\d{1,16}$/.test(id))
+/**
+ * This endpoint's delivery of an event, taken once: the event as Perly Pay
+ * holds it, and 409 for a delivery already taken, so a delivery posted to
+ * the webhook URL again runs nothing.
+ */
+export function claimDelivery(endpointId: unknown, eventId: unknown): ApiRequest {
+	if (typeof eventId !== 'string' || !/^evt_[1-9]\d{0,15}$/.test(eventId))
 		throw new Error('That is not a Perly Pay event ID.');
-	return { method: 'GET', path: `/events/${id}` };
+	return {
+		method: 'POST',
+		path: `/webhook_endpoints/${segment(endpointId, 'webhook endpoint ID')}/claim`,
+		body: { event: eventId },
+	};
 }
 
 /** Price label in the dropdown: "1,000 API credits · 12.00 USD" (and " / month" for a subscription). */

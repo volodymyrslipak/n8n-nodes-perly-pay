@@ -72,7 +72,7 @@ With a `sk_test_…` key, invoices are paid with test coins on test networks (Bi
 
 ## Security
 
-- Every delivery is checked before it starts the workflow: its `Perly-Signature` header must be an HMAC-SHA256 of the raw body with the endpoint's signing secret, at most five minutes old, compared in constant time. A delivery that fails is answered 401 and starts nothing. One that is signed but older (a queued retry) is read back from Perly Pay by its event ID with your key, and that copy is used.
+- Every delivery is checked before it starts the workflow: its `Perly-Signature` header must be an HMAC-SHA256 of the raw body with the endpoint's signing secret, at most five minutes old, compared in constant time. A delivery that fails is answered 401 and starts nothing. Every other delivery is claimed once from Perly Pay with your key before it runs, and Perly Pay's copy is used: the same delivery posted again runs nothing.
 - The signing secret is kept in the workflow's static data, never in a node's output. The secret key stays in n8n's encrypted credentials and is sent only to `pay.perly.io`.
 - The package has no runtime dependencies, reads no environment variables and no files.
 
@@ -85,6 +85,7 @@ With a `sk_test_…` key, invoices are paid with test coins on test networks (Bi
 
 ## Version history
 
+- **0.1.1**: the trigger claims each delivery once before it runs, so a delivery posted to the webhook URL again starts nothing.
 - **0.1.0**: Perly Pay (Create, Get and Get Many invoices; Search customers; Create payment links) and Perly Pay Trigger.
 
 ## License

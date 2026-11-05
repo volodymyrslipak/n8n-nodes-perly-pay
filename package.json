@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-perly-pay",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Perly Pay for n8n: crypto payments (bitcoin, USDC, USDT) straight to your own wallet, in any workflow.",
 	"license": "MIT",
 	"homepage": "https://github.com/volodymyrslipak/n8n-nodes-perly-pay#readme",
